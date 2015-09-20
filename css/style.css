@@ -3,27 +3,25 @@
 
 #bodyContent {
 	position:absolute;
-	top:30px;
+	top:100px;
 	left:0;
-	height:100%;
+	bottom:0;
 	width:100%;
 	overflow:hidden;
 }
-#leftColumn {
+#pagesColumn {
 	position:absolute;
 	top:0;
-	left:0;
-	padding-left:5px;
+	left:2%;
+	padding-right:5px;
 	padding-top:5px;
-	right:33%;
-	height:100%;
+	width:25%;
 }
-#rightColumn {
+#constructionColumn {
 	position:absolute;
 	top:0;
-	right:0;
-	width:33%;
-	height:100%;
+	right:10%;
+	left:30%;
 }
 .deleteOutpoint {
 	width:100%;
@@ -69,6 +67,10 @@
 
 .hidden {
 	display:none;
+}
+
+.center {
+	text-align:center;
 }
 
 #storyTesting {

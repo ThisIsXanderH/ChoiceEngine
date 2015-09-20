@@ -1,5 +1,6 @@
 // JavaScript Document
 CKEDITOR.replace('txtMain');
+
 function updatePageList(/*searchTerm*/) {
 	searchTerm = $('#txtPageSearch').val(); //Implement search narrowing
 	$('#pagesList').html('');
@@ -21,6 +22,7 @@ function updatePageList(/*searchTerm*/) {
 		$('#listPages').append('<option value="'.concat(pageName[i],'">'));
 		$('#selStartPage').append('<option value="'.concat(pageName[i],'">',pageName[i],'</option>'));
 	}
+
 }
 
 $('#txtPageSearch').on('input propertychange paste', function() {
@@ -50,8 +52,13 @@ function newStory() {
 	storyPageStart = "Page 1";
 	storyTitle = "Untitled Story";
 	$('#txtStoryTitle').val(storyTitle);
+	$('#headerStoryTitle').text(storyTitle);
 	storyAuthor = "Jane Doe";
 	$('#txtStoryAuthor').val(storyAuthor);
+	$('#headerStoryAuthor').text(storyAuthor);
+	
+	$('.hideAtLaunch').show();
+	dialogAppLaunch.dialog( "close" );
 	
 	pageName = [];
 	pageText = [];
@@ -63,7 +70,6 @@ function newStory() {
 	pageAdd();
 	/* END BLANK STORY FILES */
 }
-newStory();
 
 function storyLoad(jsonIn) {
 	console.log(jsonIn);
@@ -71,11 +77,18 @@ function storyLoad(jsonIn) {
 	console.log(json);
 	
 	
+	$('.hideAtLaunch').show();
+	dialogAppLaunch.dialog( "close" );
+	
+	
 	storyPageStart = unescapeJSON(json.gameSettings.start);
 	storyTitle = unescapeJSON(json.gameSettings.title);
 	$('#txtStoryTitle').val(storyTitle);
+	$('#headerStoryTitle').text(storyTitle);
 	storyAuthor = unescapeJSON(json.gameSettings.author);
 	$('#txtStoryAuthor').val(storyAuthor);
+	$('#headerStoryAuthor').text(storyAuthor);
+	
 	
 	
 	pageName = [];
@@ -103,7 +116,7 @@ function storyLoad(jsonIn) {
 	constructionPageLoad($.inArray(storyPageStart,pageName));
 }
 
-$('#btnPageNew').click(function() {
+$('.btnPageNew').click(function() {
 	pageAdd();
 });
 
@@ -118,7 +131,8 @@ function pageAdd() {
 	pagePointerText.push([]);
 	pagePointerDestination.push([]);
 	pagePointerName.push([]);
-	updatePageList();
+	//updatePageList();
+	constructionPageLoad(newNum - 1)
 	//$.inArray($('#txtPageName').
 };
 
@@ -168,11 +182,34 @@ $(document).on('click','.btnDeletePointer',function() {
 });
 
 $('#btnPageSave').click(function() {
+	pageSave(pageID);
+});
+
+$('#txtPageName').change(function() {
+	//TODO: Optionally cascade name changes?
+	if($('#txtPageName').val()=='') {
+		alert('Page Name Needed');
+		$('#txtPageName').val(pageName[pageID]);
+	} else if($.grep(pageName,function(n,i) {
+		return (n == $('#txtPageName').val() && i != pageID);
+	}).length > 0) {
+		alert("Page by name '" + $('#txtPageName').val() + "' already exists");
+		$('#txtPageName').val(pageName[pageID]);
+
+	} else {
+		if(pageName[pageID] == storyPageStart) {
+			storyPageStart = $('#txtPageName').val();
+		}
+		pageName[pageID] = $('#txtPageName').val();
+		updatePageList();
+	}
+});
+
+function pageSave(pageID) {
 	//TODO: Make this automatically save on change/page switch?
 	
 	/* Save Name */
-	//TODO: Optionally cascade name changes?
-	if($('#txtPageName').val()=='') {
+	/*if($('#txtPageName').val()=='') {
 		alert('Page Name Needed');
 	} else if($.grep(pageName,function(n,i) {
 		return (n == $('#txtPageName').val() && i != pageID);
@@ -183,7 +220,7 @@ $('#btnPageSave').click(function() {
 			storyPageStart = $('#txtPageName').val();
 		}
 		pageName[pageID] = $('#txtPageName').val();
-	}
+	}*/
 	 
 	
 	/* Save Text */
@@ -203,13 +240,17 @@ $('#btnPageSave').click(function() {
     });
 	
 	updatePageList();
-});
+};
 
 $(document).on('click','.pageListing',function() {
+	pageSave(pageID);
 	constructionPageLoad($(this).data('id'));
 });
 function constructionPageLoad(page) {
 	//Load Document
+	
+	//TODO: Consider replacing with https://jqueryui.com/tabs/#vertical ? That way always loaded, no risk of losing stuff due to not saving
+	
 	pageID = parseInt(page); //Is this the best way to do this?
 	/* Load Name */
 	$('#txtPageName').val(pageName[pageID]);
@@ -225,13 +266,13 @@ function constructionPageLoad(page) {
 	updatePageList();
 }
 
-updatePageList();
 
 $('#btnPageTest').click(function() {
 	loadTestPage(pageID);
 });
 
 $('#storyTesting').hide();
+$('.hideAtLaunch').hide();
 
 function loadTestPage(pageID) {
 	/* This stuff only needs to run once */
@@ -316,23 +357,24 @@ function unescapeJSON(str) {
 
 dialogStorySettings = $('#storySettings').dialog({
 	autoOpen: false,
-	height: 300,
-	width: 350,
+	height: 400,
+	width: 500,
 	modal: true,
+	draggable: false,
 	buttons: {
-		"Save": function() {
+		"Ok": function() {
 			storyPageStart = $('#selStartPage').val();
 			storyTitle = $('#txtStoryTitle').val();
+			$('#headerStoryTitle').text(storyTitle);
 			storyAuthor = $('#txtStoryAuthor').val();
+			$('#headerStoryAuthor').text(storyAuthor);
 			updatePageList();
+			
 		  	dialogStorySettings.dialog( "close" );
-		},
-		Cancel: function() {
-			$('#selStartPage').val(storyPageStart);
-			$('#txtStoryTitle').val(storyTitle);
-			$('#txtStoryAuthor').val(storyAuthor);
-		 	dialogStorySettings.dialog( "close" );
 		}
+	},
+	open: function(event, ui) { 
+		$(".ui-dialog-titlebar-close").hide(); 
 	},
 	close: function() {
 		
@@ -345,9 +387,10 @@ $('#btnStorySettings').click(function() {
 
 dialogStoryExport = $('#storySave').dialog({
 	autoOpen: false,
-	height: 300,
-	width: 350,
+	height: 400,
+	width: 500,
 	modal: true,
+	draggable: false,
 	buttons: {
 		"Select": function() {
 			$('#txtStorySaved').select();
@@ -355,6 +398,9 @@ dialogStoryExport = $('#storySave').dialog({
 		"Close": function() {
 		  	dialogStoryExport.dialog( "close" );
 		}
+	},
+	open: function(event, ui) { 
+		$(".ui-dialog-titlebar-close").hide(); 
 	},
 	close: function() {
 		
@@ -370,17 +416,22 @@ $('#btnStorySave').click(function() {
 
 dialogStoryImport = $('#storyLoad').dialog({
 	autoOpen: false,
-	height: 300,
-	width: 350,
+	height: 400,
+	width: 500,
 	modal: true,
+	draggable: false,
 	buttons: {
 		"Load": function() {
 			storyLoad($('#txtStoryLoad').val());
 		  	dialogStoryImport.dialog( "close" );
+		  	dialogAppLaunch.dialog( "close" );
 		},
 		"Close": function() {
 		  	dialogStoryImport.dialog( "close" );
 		}
+	},
+	open: function(event, ui) { 
+		$(".ui-dialog-titlebar-close").hide(); 
 	},
 	close: function() {
 		
@@ -389,7 +440,26 @@ dialogStoryImport = $('#storyLoad').dialog({
 
 $('#txtStoryLoad').parent().css('overflow','hidden');
 
-$('#btnStoryLoad').click(function() {
+$('.btnStoryLoad').click(function() {
 	$('#txtStoryLoad').text('');
 	dialogStoryImport.dialog("open");
+});
+
+$('.btnStoryNew').click(function() {
+	newStory();
+});
+
+
+dialogAppLaunch = $('#appLaunch').dialog({
+	autoOpen: true,
+	height: 500,
+	width: 700,
+	modal: true,
+	draggable: false,
+	open: function(event, ui) { 
+		$(".ui-dialog-titlebar-close").hide(); 
+	},
+	close: function() {
+		
+	}
 });
