@@ -1,0 +1,96 @@
+@charset "utf-8";
+/* CSS Document */
+
+#bodyContent {
+	position:absolute;
+	top:30px;
+	left:0;
+	height:100%;
+	width:100%;
+	overflow:hidden;
+}
+#leftColumn {
+	position:absolute;
+	top:0;
+	left:0;
+	padding-left:5px;
+	padding-top:5px;
+	right:33%;
+	height:100%;
+}
+#rightColumn {
+	position:absolute;
+	top:0;
+	right:0;
+	width:33%;
+	height:100%;
+}
+.deleteOutpoint {
+	width:100%;
+}
+
+#pageFileBar {
+	position:absolute;
+	top:5px;
+	right:0;
+}
+
+.pointer {
+	float:left;
+	display:block;
+	width:100%;
+	border:#000000 thin solid;
+}
+.btnDeletePointer {
+	width:100%;
+}
+
+.pageListing {
+	text-decoration:underline;
+	color:#0000FF;
+}
+
+.pageFirst {
+	list-style-type: circle;
+}
+
+#menuBar {
+	position:absolute;
+	height:30px;
+	left:0;
+	top:0;
+	right:0;
+	z-index:10000;
+}
+
+.menu {
+	width:100px;
+}
+
+.hidden {
+	display:none;
+}
+
+#storyTesting {
+	position:absolute;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	text-align:center;
+}
+
+#selStartPage {
+	width:198px;
+}
+
+#storySettings {
+	text-align:right;
+}
+
+#txtStorySaved, #txtStoryLoad {
+	
+    resize: none;
+	width:100%;
+	height:100%;
+}

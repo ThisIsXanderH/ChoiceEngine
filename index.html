@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- http://ckeditor.com/ -->
+<title>Choice Engine</title>
+<!-- stylesheet -->
+<link rel="stylesheet" href="css/jquery-ui.min.css">
+<!-- stylesheet -->
+<link rel="stylesheet" href="css/style.css">
+<!-- External Libraries -->
+<script src="js/includes/jquery-1.11.3.min.js"></script> <!-- jQuery -->
+<script src="js/includes/jquery-ui.min.js"></script> <!-- jQuery UI -->
+<script src="js/includes/ckeditor/ckeditor.js"></script> <!-- Text Editor -->
+<script src="js/includes/jquery.menu.js"></script> <!-- Menu --> <!--http://www.jqueryscript.net/menu/Create-A-Windows-Like-Multi-level-Dropdown-Menu-with-jQuery.html-->
+<!-- stylesheet -->
+<link rel="stylesheet" href="css/menu.css">
+</head>
+<style>
+
+
+</style>
+<body>
+
+<div id="menuBar">
+	<div id="menu-bar">
+		<ul id="menuConstruction" class="main-menu">
+        	<li>Story
+            	<ul>
+                	<li id="btnStorySave">Save Story</li>
+                    <li id="btnStoryLoad">Load Story</li>
+                    <li id="btnStorySettings">Story Settings</li>
+                    <li id="btnStoryTestStart">Test Story</li>
+                    <li id="btnStoryNew">New Story</li>
+				</ul>
+			</li>
+            <li>Page
+            	<ul>
+		            <li id="btnPageSave">Save Page</li>
+		            <li id="btnPageTest">Test Page</li> <!-- TODO: Making a new page should take you to that page? Save current? -->
+                    <li id="btnPageNew">New Page</li>
+              	</ul>
+             </li>     
+        </ul>
+		<ul id="menuTesting" class="main-menu hidden">
+        	<li id="btnStoryTestStop">Stop Test</li>
+        </ul>
+	</div>
+</div>
+<div id="storySettings" title="Story Settings">
+    Starting Page: <select id="selStartPage"></select><br>
+    Story Name: <input id="txtStoryTitle" type="text"/><br>
+    Author: <input id="txtStoryAuthor" type="text"/><br>
+</div>
+<div id="storySave" title="Save Story">
+	<textarea id="txtStorySaved" readonly></textarea>
+</div>
+<div id="storyLoad" title="Load Story">
+	<textarea id="txtStoryLoad"></textarea>
+</div>
+<script>
+	
+</script>
+<div id="bodyContent">
+	<div id="storyConstruction">
+        <div id="leftColumn">
+        	
+        	<div id="pageConstruction">
+                Unique Page Name: <input id="txtPageName" type="text" value="Page 1"/>
+                <div id="pageFileBar">
+                    <!-- <button id="btnPageTest">Test Page</button>
+                    <button id="btnPageSave">Save Page</button> 
+                    <button id="btnPageNew">New Page</button> -->
+                </div>
+                <textarea id="txtMain"></textarea><br>
+                Choice Text: <input id="txtPageChoice" type="text"/><br>
+                Choices
+                <datalist id="listPages"></datalist>
+                <div id="pointerList">
+                    <span class="pointer">
+                        <button class="btnDeletePointer">Delete</button><br>
+                        Text: <input class="pointerText" type="text"/><br>
+                        Leads to: <input class="pointerDestination" list="listPages"/><br>
+                        Name: <input class="pointerName" type="text"/>
+                    </span>
+                </div><br>
+                <button id="btnAddPointer">Add Decision</button>
+            </div>
+        </div>
+        <div id="rightColumn">
+            
+        	<div id="storyPages">
+                <h2 style="text-align:center">Pages</h2>
+                <input id="txtPageSearch" type="text"/><button id="btnPageSearch">Search</button>
+                <ul id="pagesList">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="storyTesting"> 
+    	<h1 id="storyTitle"></h1>
+        <h3 id="storyAuthor"></h3>
+        <div id="storyContent">
+            <div id="pageHTML">
+            </div>
+            <h1 id="pageChoiceTitle"></h1>
+            <div id="pageChoices">
+	        </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+$('.topLevel').button();
+</script>
+<!-- Main JavaScript -->
+<script src="js/main.js"></script>
+</html>
